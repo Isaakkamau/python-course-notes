@@ -1,0 +1,26 @@
+name: Greetings
+
+on: [pull_request_target, issues]
+
+jobs:
+  greeting:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+    - uses: actions/first-interaction@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        issue-message: |
+          🎉 **Welcome to the Python Course Notes Repository!** 🎉
+
+          Thanks for opening your first issue! We're excited to have you here. Whether you're a beginner or diving into data analysis, your contributions and questions are valued. Don't hesitate to explore the content, and feel free to ask for help or provide feedback!
+
+          Happy coding! 🚀
+        pr-message: |
+          🚀 **Thank you for your first pull request!** 🚀
+
+          We appreciate your contribution to the Python Course Notes repository. Your effort helps improve the learning experience for everyone. We'll review your changes soon, and please continue to share your knowledge and ideas. Together, we're building something great!
+
+          Keep learning and coding! 💻
