@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Intro to Python – Lecture 1</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=typography,aspect-ratio"></script>
+    <!-- Font & Icons -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fira+Code:wght@400;500;600&family=Orbitron:wght@500;700;900&family=Poppins:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+      html,
+      body {
+        margin: 0;
+        font-family: 'Poppins', 'Inter', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+      
+      .slide {
+        width: 1280px;
+        min-height: 720px;
+        margin: 20px auto;
+        padding: 60px;
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+        border-radius: 32px;
+        box-shadow: 
+          0 20px 60px 0 rgba(31, 41, 55, 0.25),
+          0 8px 25px 0 rgba(99, 102, 241, 0.15),
+          inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 2px solid rgba(99, 102, 241, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .slide::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: linear-gradient(90deg, #4338ca 0%, #6366f1 25%, #818cf8 50%, #a5b4fc 75%, #c7d2fe 100%);
+        z-index: 1;
+      }
+
+      h1, h2, h3 {
+        font-family: 'Orbitron', 'Poppins', sans-serif;
+        font-weight: 800;
+        color: #1e293b;
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .main-heading {
+        font-size: 4.5rem;
+        font-weight: 900;
+        color: #4338ca;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+        letter-spacing: -3px;
+        background: linear-gradient(135deg, #4338ca 0%, #6366f1 50%, #818cf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 30px rgba(67, 56, 202, 0.3);
+        animation: glow 3s ease-in-out infinite alternate;
+        position: relative;
+      }
+
+      .main-heading::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 100%;
+        height: 6px;
+        background: linear-gradient(90deg, #4338ca 0%, #818cf8 100%);
+        border-radius: 3px;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes glow {
+        from {
+          text-shadow: 0 0 20px rgba(67, 56, 202, 0.3), 0 0 40px rgba(99, 102, 241, 0.2);
+        }
+        to {
+          text-shadow: 0 0 40px rgba(67, 56, 202, 0.6), 0 0 60px rgba(99, 102, 241, 0.4);
+        }
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 0.8; transform: scaleX(1); }
+        50% { opacity: 1; transform: scaleX(1.02); }
+      }
+
+      h2 {
+        font-size: 3rem;
+        margin-bottom: 2rem;
+        color: #1e293b;
+        position: relative;
+        padding-bottom: 1rem;
+      }
+
+      h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 120px;
+        height: 4px;
+        background: linear-gradient(90deg, #6366f1 0%, #a5b4fc 100%);
+        border-radius: 2px;
+      }
+
+      h3 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        color: #4338ca;
+      }
+
+      p, li {
+        color: #334155;
+        line-height: 1.7;
+        font-size: 1.3rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+      }
+
+      .large-text {
+        font-size: 1.5rem;
+        line-height: 1.8;
+      }
+
+      .slide-number {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        z-index: 2;
+      }
+
+      .bio-card img,
+      .logo {
+        object-fit: contain;
+        filter: drop-shadow(0 8px 25px rgba(99, 102, 241, 0.3));
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .logo:hover {
+        transform: scale(1.1) rotate(-3deg);
+        filter: drop-shadow(0 12px 35px rgba(99, 102, 241, 0.4));
+      }
+
+      .bio-card {
+        border-radius: 2rem;
+        box-shadow: 0 20px 50px rgba(99, 102, 241, 0.2);
+        background: rgba(255, 255, 255, 0.9);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 3px solid rgba(99, 102, 241, 0.3);
+      }
+
+      .bio-card:hover {
+        transform: scale(1.05) rotate(-2deg);
+        box-shadow: 0 25px 60px rgba(99, 102, 241, 0.3);
+      }
+
+      .content-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        align-items: start;
+      }
+
+      .icon-feature {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(165, 180, 252, 0.05) 100%);
+        border-radius: 16px;
+        border-left: 4px solid #6366f1;
+        transition: all 0.3s ease;
+      }
+
+      .icon-feature:hover {
+        transform: translateX(8px);
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(165, 180, 252, 0.1) 100%);
+      }
+
+      .icon-feature i {
+        font-size: 1.8rem;
+        color: #6366f1;
+        margin-right: 1rem;
+        min-width: 40px;
+      }
+
+      .code-block {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        color: #e2e8f0;
+        padding: 2rem;
+        border-radius: 20px;
+        font-family: 'Fira Code', monospace;
+        font-size: 1.4rem;
+        font-weight: 500;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        border: 1px solid #475569;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .code-block::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
+      }
+
+      .highlight-box {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);
+        border: 2px solid rgba(16, 185, 129, 0.3);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+      }
+
+      .warning-box {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(251, 191, 36, 0.05) 100%);
+        border: 2px solid rgba(245, 158, 11, 0.3);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+      }
+
+      .step-counter {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        margin-right: 1rem;
+        flex-shrink: 0;
+      }
+
+      .assignment-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(165, 180, 252, 0.04) 100%);
+        border-radius: 16px;
+        border-left: 5px solid #6366f1;
+      }
+
+      .social-links a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        border-radius: 50%;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 1.2rem;
+      }
+
+      .social-links a:hover {
+        transform: scale(1.1) translateY(-2px);
+        box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+      }
+
+      .visual-element {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(165, 180, 252, 0.05) 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        border: 2px solid rgba(99, 102, 241, 0.2);
+      }
+
+      ul, ol {
+        margin: 0;
+        padding-left: 0;
+      }
+
+      li {
+        margin-bottom: 1rem;
+        padding-left: 2.5rem;
+        position: relative;
+      }
+
+      ul li::before {
+        content: '▶';
+        position: absolute;
+        left: 0;
+        color: #6366f1;
+        font-weight: bold;
+        font-size: 1rem;
+      }
+
+      ol li {
+        counter-increment: list-counter;
+      }
+
+      ol {
+        counter-reset: list-counter;
+      }
+
+      ol li::before {
+        content: counter(list-counter);
+        position: absolute;
+        left: 0;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.9rem;
+      }
+
+      .centered-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 600px;
+      }
+
+      .two-column {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+      }
+
+      .full-width {
+        grid-column: 1 / -1;
+      }
+
+      .footer-info {
+        position: absolute;
+        bottom: 30px;
+        right: 30px;
+        color: #64748b;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      kbd {
+        background: #1e293b;
+        color: #e2e8f0;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-family: 'Fira Code', monospace;
+        font-size: 0.9em;
+        font-weight: 600;
+      }
+
+      code {
+        background: rgba(99, 102, 241, 0.1);
+        color: #4338ca;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-family: 'Fira Code', monospace;
+        font-weight: 600;
+      }
+
+      .chart-container {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Slide 1: Title & Overview - KEEPING AS REQUESTED -->
+    <section class="slide">
+      <div class="slide-number">1 / 98</div>
+      <!-- University & Department Logos -->
+      <div class="flex justify-between items-center mb-6">
+        <img src="https://uonbi.ac.ke/sites/default/files/UoN_Logo.png" alt="University of Nairobi" class="logo h-28" />
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJUIh9dv0WNnwiZ64fo7kmJfcELSzoWP50UWha73nknepHAC_TdWM_IAiaLFCsZLjYdtc&usqp=CAU" alt="MANU Logo" class="logo h-28" />
+      </div>
+      <div>
+        <h1 class="main-heading">Introduction to Python Programming</h1>
+        <p class="mt-2 text-xl text-gray-600 font-semibold">
+          Lecture 1 · Getting Started &amp; Your First Program
+        </p>
+      </div>
+      <div class="mt-8 flex-grow flex items-center justify-center">
+        <div class="chart-container">
+          <canvas id="topicsChart" class="aspect-video max-w-xl"></canvas>
+        </div>
+      </div>
+      <div class="footer-info">
+        © 2025 Isaak Kamau
+      </div>
+    </section>
+
+    <!-- Slide 2: Course Outcomes -->
+    <section class="slide centered-content">
+      <div class="slide-number">2 / 98</div>
+      <h2>Course Outcomes</h2>
+      <div class="grid gap-4">
+        <div class="icon-feature">
+          <i class="fas fa-code"></i>
+          <span class="large-text">Master Python syntax and data structures</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-puzzle-piece"></i>
+          <span class="large-text">Write modular code with functions</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-robot"></i>
+          <span class="large-text">Leverage Cursor IDE + AI ("vibe coding")</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-chart-bar"></i>
+          <span class="large-text">Perform basic data analysis with pandas &amp; matplotlib</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-brain"></i>
+          <span class="large-text">Build a foundation for data science &amp; AI</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: Instructor Bio -->
+    <section class="slide centered-content">
+      <div class="slide-number">3 / 98</div>
+      <h2>👨‍💻 About the Instructor</h2>
+      <div class="two-column">
+        <img
+          src="https://media.licdn.com/dms/image/v2/D4D22AQHwXTUp8sh4_g/feedshare-shrink_800/B4DZWlHDqXHIAg-/0/1742231856314?e=1755129600&v=beta&t=Ye1GAE5UHgYOTd36OHNWMpFN1dos9xxzx4uFGEJUfDM"
+          alt="Isaak Kamau"
+          class="bio-card h-80 w-64 mx-auto object-cover"
+        />
+        <div>
+          <h3 class="text-3xl font-bold text-indigo-900 mb-4">Isaak Kamau</h3>
+          <p class="large-text mb-4">
+            AI/ML Engineer &amp; Technical Instructor with 6+ years of experience in Data Science, Machine Learning and AI. Mentor to 1,000+ developers through hands-on training and real-world projects.
+          </p>
+          
+          <div class="highlight-box">
+            <p class="text-xl font-semibold text-emerald-700 mb-2">
+              "I believe coding should feel like jamming with good vibes—let's make Python
+              <strong>fun &amp; empowering</strong>!"
+            </p>
+          </div>
+          <div class="social-links flex space-x-4 mt-6">
+            <a href="https://github.com/Isaakkamau"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/isaak-Kamau/"><i class="fab fa-linkedin"></i></a>
+            <a href="https://medium.com/@isaakKamau2018"><i class="fab fa-medium"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: GitHub Setup -->
+    <section class="slide centered-content">
+      <div class="slide-number">4 / 98</div>
+      <h2> GitHub: Your Coding Portfolio</h2>
+      <div class="space-y-6">
+        <div class="highlight-box">
+          <div class="icon-feature">
+            <i class="fab fa-github text-4xl"></i>
+            <span class="text-xl"><strong>First Task:</strong> Create a GitHub account at <a href="https://github.com" class="text-indigo-600 underline font-bold">github.com</a></span>
+          </div>
+        </div>
+        
+        <div class="two-column">
+          <div>
+            <h3 class="text-2xl font-bold mb-4 text-purple-600">Why GitHub?</h3>
+            <div class="space-y-3">
+              <div class="icon-feature">
+                <i class="fas fa-code-branch"></i>
+                <span class="large-text"><strong>Version Control:</strong> Track changes in your code</span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-users"></i>
+                <span class="large-text"><strong>Collaboration:</strong> Work with others on projects</span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-briefcase"></i>
+                <span class="large-text"><strong>Portfolio:</strong> Showcase your work to employers</span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-globe"></i>
+                <span class="large-text"><strong>Open Source:</strong> Contribute to global projects</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="visual-element">
+            <i class="fas fa-book-open text-4xl text-indigo-600 mb-4"></i>
+            <h3 class="text-xl font-bold mb-4">📚 Course Materials</h3>
+            <p class="large-text mb-4">All lecture notes, code examples, and datasets are available at:</p>
+            <div class="code-block text-center">
+              <a href="https://github.com/Isaakkamau/python-course-notes" class="text-blue-300 hover:text-blue-100">
+                github.com/Isaakkamau/python-course-notes
+              </a>
+            </div>
+            <div class="warning-box mt-4">
+              <p class="text-sm">
+                <i class="fas fa-star mr-2"></i>
+                <strong>Pro Tip:</strong> Star ⭐ the repository to bookmark it!
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="highlight-box">
+          <p class="text-center large-text">
+            <i class="fas fa-graduation-cap mr-2"></i>
+            <strong>Student Benefit:</strong> GitHub offers free Pro accounts for students at <a href="https://education.github.com" class="text-indigo-600 underline font-bold">education.github.com</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: What is Python? -->
+    <section class="slide centered-content">
+      <div class="slide-number">5 / 98</div>
+      <h2> What is Python?</h2>
+      <div class="two-column">
+        <div class="visual-element">
+          <i class="fab fa-python text-6xl text-blue-600 mb-4"></i>
+          <h3 class="text-2xl font-bold mb-4">Created in 1991</h3>
+          <p class="text-lg">by Guido van Rossum</p>
+        </div>
+        <div>
+          <div class="icon-feature">
+            <i class="fas fa-heart"></i>
+            <span class="large-text">Popular programming language loved by millions</span>
+          </div>
+          <div class="icon-feature">
+            <i class="fas fa-magic"></i>
+            <span class="large-text">Known for its simplicity and versatility</span>
+          </div>
+          <div class="icon-feature">
+            <i class="fas fa-users"></i>
+            <span class="large-text">Huge community and ecosystem</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: What Can Python Do? -->
+    <section class="slide centered-content">
+      <div class="slide-number">6 / 98</div>
+      <h2> What Can Python Do?</h2>
+      <div class="grid grid-cols-2 gap-6">
+        <div class="icon-feature">
+          <i class="fas fa-globe"></i>
+          <span class="large-text">Build web applications (server-side)</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-cogs"></i>
+          <span class="large-text">Create workflows and automation scripts</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-database"></i>
+          <span class="large-text">Connect to and manage databases</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-file-alt"></i>
+          <span class="large-text">Read, write, and modify files</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-chart-line"></i>
+          <span class="large-text">Handle big data and complex mathematics</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-rocket"></i>
+          <span class="large-text">Rapid prototyping and production software</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: Why Python? -->
+    <section class="slide centered-content">
+      <div class="slide-number">7 / 98</div>
+      <h2> Why Python?</h2>
+      <div class="grid grid-cols-2 gap-6">
+        <div class="icon-feature">
+          <i class="fas fa-laptop"></i>
+          <span class="large-text">Works on Windows, Mac, Linux, Raspberry Pi, and more</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-comment"></i>
+          <span class="large-text">Simple, English-like syntax</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-compress-alt"></i>
+          <span class="large-text">Write programs with fewer lines of code</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-play"></i>
+          <span class="large-text">Interpreter system: run code as soon as it's written</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-shapes"></i>
+          <span class="large-text">Supports procedural, object-oriented, and functional programming</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-graduation-cap"></i>
+          <span class="large-text">Perfect for beginners and experts alike</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: Good to Know -->
+    <section class="slide centered-content">
+      <div class="slide-number">8 / 98</div>
+      <h2> Good to Know</h2>
+      <div class="space-y-6">
+        <div class="highlight-box">
+          <div class="icon-feature">
+            <i class="fas fa-info-circle"></i>
+            <span class="large-text">We use <strong>Python 3</strong> (latest major version)</span>
+          </div>
+        </div>
+        <div class="warning-box">
+          <div class="icon-feature">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span class="large-text">Python 2 is still used but only receives security updates</span>
+          </div>
+        </div>
+        <div class="two-column">
+          <div>
+            <h3 class="text-xl font-bold mb-4">Popular IDEs:</h3>
+            <div class="space-y-3">
+              <div class="icon-feature">
+                <i class="fas fa-code"></i>
+                <span>PyCharm (Professional)</span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-terminal"></i>
+                <span>Cursor (AI-Powered)</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold mb-4">For This Course:</h3>
+            <div class="space-y-3">
+              <div class="icon-feature">
+                <i class="fas fa-star"></i>
+                <span>Cursor IDE (Primary)</span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-plus"></i>
+                <span>Anaconda (Data Science)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- Slide: What is Programming? -->
+    <section class="slide centered-content">
+      <div class="slide-number">9 / 98</div>
+      <h2> What is a Program?</h2>
+      <div class="space-y-6">
+        <div class="visual-element">
+          <i class="fas fa-lightbulb text-4xl text-yellow-500 mb-4"></i>
+          <h3 class="text-2xl font-bold mb-4">Think of it as giving instructions!</h3>
+        </div>
+        
+        <div class="two-column">
+          <div class="space-y-4">
+            <div class="icon-feature">
+              <i class="fas fa-list-ol"></i>
+              <span class="large-text">A <strong>program</strong> is a set of instructions for a computer</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-language"></i>
+              <span class="large-text">We write instructions using a <strong>programming language</strong> (like Python)</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-spell-check"></i>
+              <span class="large-text">The "grammar" of this language is called <strong>syntax</strong></span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-file-code"></i>
+              <span class="large-text">We save these instructions in a <strong>script file</strong> (e.g., <code>hello.py</code>)</span>
+            </div>
+          </div>
+          
+          <div class="highlight-box">
+            <h4 class="text-xl font-bold mb-3">🍳 Like a Recipe!</h4>
+            <p class="large-text">
+              Just like a cooking recipe tells you step-by-step how to make food, 
+              a program tells the computer step-by-step what to do.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: How Code Becomes Action -->
+    <section class="slide centered-content">
+      <div class="slide-number">10 / 98</div>
+      <h2>⚡ How Code Becomes Action</h2>
+      <div class="space-y-6">
+        <div class="highlight-box">
+          <p class="text-center large-text">
+            <strong>Ever wonder what happens when you hit "Run"?</strong>
+          </p>
+        </div>
+        
+        <div class="space-y-4">
+          <div class="assignment-item">
+            <div class="step-counter">1</div>
+            <span class="large-text"><strong>You write:</strong> <code>print("Hello, World!")</code> in your <code>.py</code> file</span>
+          </div>
+          
+          <div class="assignment-item">
+            <div class="step-counter">2</div>
+            <span class="large-text"><strong>Python Interpreter:</strong> A special program that reads and understands your Python code line by line</span>
+          </div>
+          
+          <div class="assignment-item">
+            <div class="step-counter">3</div>
+            <span class="large-text"><strong>Translation:</strong> The interpreter converts your code into instructions the computer can understand</span>
+          </div>
+          
+          <div class="assignment-item">
+            <div class="step-counter">4</div>
+            <span class="large-text"><strong>Execution:</strong> The computer displays "Hello, World!" on your screen!</span>
+          </div>
+        </div>
+        
+        <div class="warning-box">
+          <p class="large-text text-center">
+            <i class="fas fa-magic mr-2"></i>
+            It's not magic—it's the Python interpreter working behind the scenes!
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: Python Installation -->
+    <section class="slide centered-content">
+      <div class="slide-number">11 / 98</div>
+      <h2>⚙️ Python Installation</h2>
+      <div class="space-y-6">
+        <div class="highlight-box">
+          <div class="icon-feature">
+            <i class="fas fa-laptop"></i>
+            <span class="large-text">Many PCs and Macs have Python pre-installed</span>
+          </div>
+        </div>
+        
+        <div class="two-column">
+          <div class="visual-element">
+            <i class="fab fa-windows text-4xl text-blue-600 mb-4"></i>
+            <h3 class="text-xl font-bold">Windows</h3>
+            <div class="code-block mt-4">python --version</div>
+            <p class="mt-2 text-sm">Run in Command Prompt</p>
+          </div>
+          
+          <div class="visual-element">
+            <i class="fab fa-apple text-4xl text-gray-700 mb-4"></i>
+            <h3 class="text-xl font-bold">Mac/Linux</h3>
+            <div class="code-block mt-4">python --version</div>
+            <p class="mt-2 text-sm">Run in Terminal</p>
+          </div>
+        </div>
+        
+        <div class="warning-box">
+          <div class="icon-feature">
+            <i class="fas fa-download"></i>
+            <span class="large-text">If not installed, download from <a href="https://www.python.org/" class="text-indigo-600 underline font-bold">python.org</a></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: Setup Guide -->
+    <section class="slide centered-content">
+      <div class="slide-number">12 / 98</div>
+      <h2> Setup: Python &amp; Cursor IDE</h2>
+      <div class="two-column gap-8">
+        <!-- Python -->
+        <div class="visual-element">
+          <i class="fab fa-python text-5xl text-blue-600 mb-4"></i>
+          <h3 class="text-2xl font-bold mb-4">1. Install Python 3.12+</h3>
+          <div class="space-y-3">
+            <div class="icon-feature">
+              <i class="fas fa-download"></i>
+              <span>Download from <a href="https://python.org" class="text-indigo-600 underline font-bold">python.org</a></span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-check"></i>
+              <span>Enable <strong>Add to PATH</strong> (Windows)</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-terminal"></i>
+              <span>Run <code>python --version</code> to verify</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Cursor -->
+        <div class="visual-element">
+          <i class="fas fa-robot text-5xl text-purple-600 mb-4"></i>
+          <h3 class="text-2xl font-bold mb-4">2. Install Cursor IDE</h3>
+          <div class="space-y-3">
+            <div class="icon-feature">
+              <i class="fas fa-download"></i>
+              <span>Download from <a href="https://cursor.com" class="text-indigo-600 underline font-bold">cursor.com</a></span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-gift"></i>
+              <span>Login with student email for 1-year Pro 🎁</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-puzzle-piece"></i>
+              <span>Enable Python extension</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-folder"></i>
+              <span>Open new folder <code>intro-python</code></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="highlight-box mt-6">
+        <p class="text-center large-text">
+          <i class="fas fa-question-circle mr-2"></i>
+          Need help? Join #setup on Slack or ask Cursor's AI chat!
+        </p>
+      </div>
+    </section>
+
+    <!-- Slide: Your First Script -->
+    <section class="slide centered-content">
+      <div class="slide-number">13 / 98</div>
+      <h2>✨ Your First Python Script</h2>
+      <div class="space-y-6">
+        <div class="highlight-box">
+          <p class="large-text text-center">
+            Create <code>hello.py</code> and type:
+          </p>
+        </div>
+        
+        <div class="code-block text-center">
+# This is my first Python program
+print("Hello, World!")
+        </div>
+        
+        <div class="two-column">
+          <div class="space-y-4">
+            <div class="icon-feature">
+              <i class="fas fa-comment"></i>
+              <span class="large-text"><strong>Comments:</strong> Lines starting with <code>#</code> are ignored by Python (notes for humans!)</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-quote-right"></i>
+              <span class="large-text"><strong>Strings:</strong> Text wrapped in quotes (<code>"Hello, World!"</code>) is called a string</span>
+            </div>
+            <div class="assignment-item">
+              <div class="step-counter">1</div>
+              <span class="large-text">Save and run (▶️ button or <kbd>F5</kbd>)</span>
+            </div>
+            <div class="assignment-item">
+              <div class="step-counter">2</div>
+              <span class="large-text">Observe output: <strong>Hello, World!</strong></span>
+            </div>
+          </div>
+          
+          <div class="visual-element">
+            <i class="fas fa-magic text-4xl text-purple-600 mb-4"></i>
+            <h3 class="text-xl font-bold">🎯 Challenge</h3>
+            <p class="large-text">Add a comment with your name and print a fun fact about yourself!</p>
+            <div class="code-block mt-4 text-left text-sm">
+# My name is [Your Name]
+print("Fun fact: I love Python!")
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: Data Science Roadmap 2025 -->
+    <section class="slide centered-content">
+      <div class="slide-number">14 / 98</div>
+      <h2>🗺️ Your Data Science Journey: Complete Roadmap 2025</h2>
+      <div class="space-y-6">
+        <div class="highlight-box">
+          <p class="text-center large-text">
+            <strong>From Python Beginner → Data Science Professional</strong>
+          </p>
+        </div>
+        
+        <div class="chart-container">
+          <canvas id="roadmapChart" class="aspect-video max-w-6xl"></canvas>
+        </div>
+        
+        <div class="warning-box">
+          <p class="text-center large-text">
+            <i class="fas fa-rocket mr-2"></i>
+            <strong>Timeline:</strong> 12-18 months with consistent practice (10-15 hours/week)
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: Phase 1 - Foundation -->
+    <section class="slide centered-content">
+      <div class="slide-number">15 / 98</div>
+      <h2>🏗️ Phase 1: Foundation (Months 1-4)</h2>
+      <div class="two-column gap-6">
+        <div>
+          <h3 class="text-2xl font-bold mb-4 text-indigo-600">Programming Skills</h3>
+          <div class="space-y-3">
+            <div class="icon-feature">
+              <i class="fab fa-python"></i>
+              <span><strong>Python:</strong> Syntax, data structures, functions</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-database"></i>
+              <span><strong>SQL:</strong> Database queries, joins, aggregations</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fab fa-git-alt"></i>
+              <span><strong>Git/GitHub:</strong> Version control, collaboration</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-terminal"></i>
+              <span><strong>Command Line:</strong> Basic navigation & file operations</span>
+            </div>
+          </div>
+          
+          <h3 class="text-2xl font-bold mb-4 mt-6 text-green-600">Math & Statistics</h3>
+          <div class="space-y-3">
+            <div class="icon-feature">
+              <i class="fas fa-calculator"></i>
+              <span><strong>Statistics:</strong> Descriptive stats, probability, distributions</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-square-root-alt"></i>
+              <span><strong>Linear Algebra:</strong> Vectors, matrices, eigenvalues</span>
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-2xl font-bold mb-4 text-purple-600">Data Manipulation</h3>
+          <div class="space-y-3">
+            <div class="icon-feature">
+              <i class="fas fa-table"></i>
+              <span><strong>Pandas:</strong> DataFrames, cleaning, transformation</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-sort-numeric-up"></i>
+              <span><strong>NumPy:</strong> Arrays, numerical computations</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-chart-line"></i>
+              <span><strong>Matplotlib/Seaborn:</strong> Basic visualizations</span>
+            </div>
+          </div>
+          
+          <div class="highlight-box mt-6">
+            <h4 class="text-lg font-bold mb-2">📚 Learning Resources:</h4>
+            <ul class="text-sm space-y-1">
+              <li>• <strong>Python:</strong> Automate the Boring Stuff, Python.org tutorial</li>
+              <li>• <strong>SQL:</strong> SQLBolt, W3Schools SQL</li>
+              <li>• <strong>Git:</strong> GitHub Learning Lab, Git Handbook</li>
+              <li>• <strong>Math:</strong> Khan Academy Statistics, 3Blue1Brown Linear Algebra</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: Phase 2 - Core Data Science -->
+    <section class="slide centered-content">
+      <div class="slide-number">16 / 98</div>
+      <h2>🎯 Phase 2: Core Data Science (Months 5-8)</h2>
+      <div class="two-column gap-6">
+        <div>
+          <h3 class="text-2xl font-bold mb-4 text-blue-600">Machine Learning</h3>
+          <div class="space-y-3">
+            <div class="icon-feature">
+              <i class="fas fa-brain"></i>
+              <span><strong>Scikit-learn:</strong> Classification, regression, clustering</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-cogs"></i>
+              <span><strong>Model Evaluation:</strong> Cross-validation, metrics, tuning</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-project-diagram"></i>
+              <span><strong>Feature Engineering:</strong> Selection, scaling, encoding</span>
+            </div>
+          </div>
+          
+          <h3 class="text-2xl font-bold mb-4 mt-6 text-orange-600">Advanced Analytics</h3>
+          <div class="space-y-3">
+            <div class="icon-feature">
+              <i class="fas fa-chart-area"></i>
+              <span><strong>Time Series:</strong> Forecasting, seasonality, trends</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-flask"></i>
+              <span><strong>A/B Testing:</strong> Experimental design, hypothesis testing</span>
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-2xl font-bold mb-4 text-green-600">Visualization & Communication</h3>
+          <div class="space-y-3">
+            <div class="icon-feature">
+              <i class="fas fa-chart-pie"></i>
+              <span><strong>Tableau/Power BI:</strong> Interactive dashboards</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-chart-bar"></i>
+              <span><strong>Advanced Plotting:</strong> Plotly, Bokeh for web viz</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-presentation"></i>
+              <span><strong>Storytelling:</strong> Data narratives, business insights</span>
+            </div>
+          </div>
+          
+          <div class="warning-box mt-6">
+            <h4 class="text-lg font-bold mb-2">🔥 Hot Skills for 2025:</h4>
+            <ul class="text-sm space-y-1">
+              <li>• <strong>AutoML:</strong> H2O.ai, Google AutoML, MLflow</li>
+              <li>• <strong>No-Code Tools:</strong> Alteryx, Dataiku, Knime</li>
+              <li>• <strong>Real-time Analytics:</strong> Apache Kafka, Streamlit</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: Phase 3 - Specialization & Production -->
+    <section class="slide centered-content">
+      <div class="slide-number">17 / 98</div>
+      <h2>🚀 Phase 3: Specialization & Production (Months 9-12)</h2>
+      <div class="two-column gap-6">
+        <div>
+          <h3 class="text-2xl font-bold mb-4 text-purple-600">Choose Your Path</h3>
+          <div class="space-y-4">
+            <div class="highlight-box">
+              <h4 class="font-bold text-lg">🤖 AI/ML Engineer</h4>
+              <div class="icon-feature">
+                <i class="fas fa-robot"></i>
+                <span><strong>Deep Learning:</strong> TensorFlow, PyTorch, Transformers</span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-language"></i>
+                <span><strong>NLP:</strong> BERT, GPT, Hugging Face</span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-eye"></i>
+                <span><strong>Computer Vision:</strong> OpenCV, YOLO, CNN architectures</span>
+              </div>
+            </div>
+            
+            <div class="highlight-box">
+              <h4 class="font-bold text-lg">📊 Business Analytics</h4>
+              <div class="icon-feature">
+                <i class="fas fa-chart-line"></i>
+                <span><strong>Advanced BI:</strong> DAX, Power Query, Looker</span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-coins"></i>
+                <span><strong>Business Metrics:</strong> KPIs, ROI analysis, forecasting</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-2xl font-bold mb-4 text-red-600">Production & MLOps</h3>
+          <div class="space-y-3">
+            <div class="icon-feature">
+              <i class="fab fa-docker"></i>
+              <span><strong>Containerization:</strong> Docker, Kubernetes</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-cloud"></i>
+              <span><strong>Cloud Platforms:</strong> AWS, GCP, Azure ML Services</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-infinity"></i>
+              <span><strong>CI/CD:</strong> GitHub Actions, MLflow, DVC</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-tachometer-alt"></i>
+              <span><strong>Monitoring:</strong> Model drift, performance tracking</span>
+            </div>
+          </div>
+          
+          <h3 class="text-2xl font-bold mb-4 mt-4 text-teal-600">Big Data (Optional)</h3>
+          <div class="space-y-3">
+            <div class="icon-feature">
+              <i class="fas fa-database"></i>
+              <span><strong>Apache Spark:</strong> PySpark, distributed computing</span>
+            </div>
+            <div class="icon-feature">
+              <i class="fas fa-stream"></i>
+              <span><strong>Stream Processing:</strong> Kafka, Apache Flink</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: Tools & Technologies Recruiters Want -->
+    <section class="slide centered-content">
+      <div class="slide-number">18 / 98</div>
+      <h2>💼 What Recruiters Are Looking For in 2025</h2>
+      <div class="space-y-6">
+        <div class="highlight-box">
+          <p class="text-center text-xl font-bold">
+            Based on 30,000+ job descriptions & industry analysis
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-3 gap-6">
+          <div class="visual-element">
+            <h3 class="text-lg font-bold mb-3 text-blue-600">🔥 Essential (90%+ jobs)</h3>
+            <div class="space-y-2 text-sm">
+              <div class="icon-feature">
+                <i class="fab fa-python"></i>
+                <span><strong>Python</strong> (78% of postings)</span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-database"></i>
+                <span><strong>SQL</strong> (70% of postings)</span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-brain"></i>
+                <span><strong>Machine Learning</strong> (69% of postings)</span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-chart-bar"></i>
+                <span><strong>Data Visualization</strong></span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-cloud"></i>
+                <span><strong>Cloud Computing</strong> (20% require certifications)</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="visual-element">
+            <h3 class="text-lg font-bold mb-3 text-green-600">📈 Growing Fast</h3>
+            <div class="space-y-2 text-sm">
+              <div class="icon-feature">
+                <i class="fas fa-robot"></i>
+                <span><strong>Generative AI</strong> (LLMs, prompt engineering)</span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-language"></i>
+                <span><strong>NLP</strong> (5% → 19% in 2024)</span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-infinity"></i>
+                <span><strong>MLOps</strong> (deployment, monitoring)</span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-stream"></i>
+                <span><strong>Real-time Analytics</strong></span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-shield-alt"></i>
+                <span><strong>Data Privacy</strong> (GDPR, ethics)</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="visual-element">
+            <h3 class="text-lg font-bold mb-3 text-purple-600">💰 High-Paying Niches</h3>
+            <div class="space-y-2 text-sm">
+              <div class="icon-feature">
+                <i class="fas fa-coins"></i>
+                <span><strong>AI/ML Engineer:</strong> $120-180k</span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-tools"></i>
+                <span><strong>Data Engineer:</strong> $110-160k</span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-chart-line"></i>
+                <span><strong>Senior Data Scientist:</strong> $130-200k</span>
+              </div>
+              <div class="icon-feature">
+                <i class="fas fa-user-tie"></i>
+                <span><strong>Data Science Manager:</strong> $150-250k</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="warning-box">
+          <h3 class="text-lg font-bold mb-2">🎯 Pro Tips for 2025:</h3>
+          <div class="two-column text-sm">
+            <div>
+              <p>• <strong>Soft Skills Matter:</strong> 63% of employers cite communication as key barrier</p>
+              <p>• <strong>Domain Expertise:</strong> Healthcare, finance, retail specialization = premium</p>
+              <p>• <strong>Business Acumen:</strong> Translate data insights to ROI/business impact</p>
+            </div>
+            <div>
+              <p>• <strong>Continuous Learning:</strong> Industry changes every 6 months</p>
+              <p>• <strong>Portfolio Projects:</strong> GitHub + Kaggle + real business cases</p>
+              <p>• <strong>Certifications:</strong> AWS/Google/Azure ML + vendor-specific tools</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: Assignment -->
+    <section class="slide centered-content">
+      <div class="slide-number">19 / 98</div>
+      <h2>📝 Assignment 1 (Due Next Lecture)</h2>
+      <div class="space-y-6">
+        <div class="assignment-item">
+          <div class="step-counter">1</div>
+          <div>
+            <span class="large-text block mb-2"><strong>Create your hello.py script</strong></span>
+            <div class="code-block text-left">
+# Your Name: [Write your name here]
+# Course: Introduction to Python Programming
+print("Hello, World!")
+print("My name is [Your Name]")
+print("Fun fact: [Share something interesting about yourself]")
+            </div>
+            <p class="text-sm mt-2">Save this as <code>hello.py</code> and run it in Cursor. Submit the file on LMS.</p>
+          </div>
+        </div>
+        
+        <div class="assignment-item">
+          <div class="step-counter">2</div>
+          <div>
+            <span class="large-text block mb-2"><strong>Watch Git Tutorial</strong></span>
+            <div class="highlight-box">
+              <h4 class="font-bold text-lg mb-2">📺 "Git Tutorial for Beginners: Learn Git in 1 Hour"</h4>
+              <p class="mb-2"><strong>Channel:</strong> Programming with Mosh (4.66M subscribers)</p>
+              <div class="code-block">
+                <a href="https://www.youtube.com/watch?v=8JJ101D3knE" target="_blank" class="text-blue-300 hover:text-blue-100">
+                  https://www.youtube.com/watch?v=8JJ101D3knE
+                </a>
+              </div>
+              <p class="text-sm mt-2">
+                <i class="fas fa-info-circle mr-1"></i>
+                Don't worry about understanding everything—just get familiar with Git concepts. We'll practice together in class!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="warning-box mt-8">
+        <p class="text-center large-text">
+          <i class="fas fa-clock mr-2"></i>
+          <strong>Office hours:</strong> Thu 16:00–18:00 EAT • Zoom link on LMS
+        </p>
+      </div>
+    </section>
+
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {
+        // Course Topics Chart
+        const data = [3, 2, 2, 1, 2, 2];
+        const labels = [
+          'Python Basics',
+          'Data Structures',
+          'Functions & OOP',
+          'File Handling',
+          'Data Analysis',
+          'AI Integration'
+        ];
+        const colors = ['#4338ca', '#6366f1', '#818cf8', '#a5b4fc', '#c7d2fe', '#e0e7ff'];
+
+        new Chart(document.getElementById('topicsChart'), {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [{
+              data,
+              backgroundColor: colors,
+              borderColor: '#4338ca',
+              borderWidth: 2,
+              borderRadius: 8,
+              borderSkipped: false,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              title: {
+                display: true,
+                text: 'Course Topics Distribution',
+                font: { size: 24, weight: '700', family: 'Poppins' },
+                color: '#1e3a8a',
+                padding: 20
+              },
+              tooltip: {
+                backgroundColor: 'rgba(67, 56, 202, 0.9)',
+                titleColor: 'white',
+                bodyColor: 'white',
+                borderColor: '#6366f1',
+                borderWidth: 2,
+                cornerRadius: 10,
+                titleFont: { size: 16, weight: 'bold' },
+                bodyFont: { size: 14 },
+                callbacks: {
+                  label: ctx => `${ctx.parsed.y} lecture${ctx.parsed.y > 1 ? 's' : ''}`
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  stepSize: 1,
+                  font: { size: 14, weight: '600' },
+                  color: '#374151'
+                },
+                grid: {
+                  color: 'rgba(99, 102, 241, 0.1)'
+                }
+              },
+              x: {
+                ticks: {
+                  font: { size: 12, weight: '600' },
+                  color: '#374151'
+                },
+                grid: {
+                  display: false
+                }
+              }
+            },
+            animation: {
+              duration: 2000,
+              easing: 'easeOutBounce'
+            }
+          }
+        });
+
+        // Data Science Roadmap Chart
+        const roadmapChart = document.getElementById('roadmapChart');
+        if (roadmapChart) {
+          const roadmapData = {
+            labels: [
+              'Foundation\n(Months 1-4)',
+              'Core DS\n(Months 5-8)',
+              'Specialization\n(Months 9-12)',
+              'Advanced/Production\n(Months 13-18)'
+            ],
+            datasets: [
+              {
+                label: 'Programming Skills',
+                data: [85, 70, 45, 30],
+                backgroundColor: 'rgba(67, 56, 202, 0.8)',
+                borderColor: '#4338ca',
+                borderWidth: 2,
+                borderRadius: 8,
+              },
+              {
+                label: 'Math & Statistics',
+                data: [75, 80, 60, 40],
+                backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                borderColor: '#10b981',
+                borderWidth: 2,
+                borderRadius: 8,
+              },
+              {
+                label: 'Machine Learning',
+                data: [10, 85, 90, 95],
+                backgroundColor: 'rgba(139, 92, 246, 0.8)',
+                borderColor: '#8b5cf6',
+                borderWidth: 2,
+                borderRadius: 8,
+              },
+              {
+                label: 'Business & Communication',
+                data: [20, 40, 80, 90],
+                backgroundColor: 'rgba(245, 158, 11, 0.8)',
+                borderColor: '#f59e0b',
+                borderWidth: 2,
+                borderRadius: 8,
+              },
+              {
+                label: 'Production & MLOps',
+                data: [0, 10, 60, 95],
+                backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                borderColor: '#ef4444',
+                borderWidth: 2,
+                borderRadius: 8,
+              }
+            ]
+          };
+
+          new Chart(roadmapChart, {
+            type: 'bar',
+            data: roadmapData,
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'Data Science Skills Development Timeline',
+                  font: { size: 20, weight: '700', family: 'Poppins' },
+                  color: '#1e3a8a',
+                  padding: 20
+                },
+                legend: {
+                  display: true,
+                  position: 'top',
+                  labels: {
+                    font: { size: 12, weight: '600' },
+                    color: '#374151',
+                    usePointStyle: true,
+                    pointStyle: 'rect',
+                    padding: 15
+                  }
+                },
+                tooltip: {
+                  backgroundColor: 'rgba(67, 56, 202, 0.9)',
+                  titleColor: 'white',
+                  bodyColor: 'white',
+                  borderColor: '#6366f1',
+                  borderWidth: 2,
+                  cornerRadius: 10,
+                  titleFont: { size: 14, weight: 'bold' },
+                  bodyFont: { size: 12 },
+                  callbacks: {
+                    label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}% proficiency expected`
+                  }
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  max: 100,
+                  ticks: {
+                    stepSize: 20,
+                    font: { size: 12, weight: '600' },
+                    color: '#374151',
+                    callback: value => `${value}%`
+                  },
+                  grid: {
+                    color: 'rgba(99, 102, 241, 0.1)'
+                  },
+                  title: {
+                    display: true,
+                    text: 'Skill Proficiency (%)',
+                    font: { size: 14, weight: '600' },
+                    color: '#374151'
+                  }
+                },
+                x: {
+                  ticks: {
+                    font: { size: 11, weight: '600' },
+                    color: '#374151',
+                    maxRotation: 0
+                  },
+                  grid: {
+                    display: false
+                  }
+                }
+              },
+              animation: {
+                duration: 3000,
+                easing: 'easeOutQuart'
+              }
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

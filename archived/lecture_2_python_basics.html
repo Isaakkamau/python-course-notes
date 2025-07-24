@@ -1,0 +1,1998 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Python Basics – Lecture 2</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=typography,aspect-ratio"></script>
+    <!-- Font & Icons -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fira+Code:wght@400;500;600&family=Orbitron:wght@500;700;900&family=Poppins:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+      html,
+      body {
+        margin: 0;
+        font-family: 'Poppins', 'Inter', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+      
+      .slide {
+        width: 1280px;
+        min-height: 720px;
+        margin: 20px auto;
+        padding: 60px;
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+        border-radius: 32px;
+        box-shadow: 
+          0 20px 60px 0 rgba(31, 41, 55, 0.25),
+          0 8px 25px 0 rgba(99, 102, 241, 0.15),
+          inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 2px solid rgba(99, 102, 241, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .slide::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: linear-gradient(90deg, #4338ca 0%, #6366f1 25%, #818cf8 50%, #a5b4fc 75%, #c7d2fe 100%);
+        z-index: 1;
+      }
+
+      h1, h2, h3 {
+        font-family: 'Orbitron', 'Poppins', sans-serif;
+        font-weight: 800;
+        color: #1e293b;
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .main-heading {
+        font-size: 4.5rem;
+        font-weight: 900;
+        color: #4338ca;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+        letter-spacing: -3px;
+        background: linear-gradient(135deg, #4338ca 0%, #6366f1 50%, #818cf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 30px rgba(67, 56, 202, 0.3);
+        animation: glow 3s ease-in-out infinite alternate;
+        position: relative;
+      }
+
+      .main-heading::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 100%;
+        height: 6px;
+        background: linear-gradient(90deg, #4338ca 0%, #818cf8 100%);
+        border-radius: 3px;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes glow {
+        from {
+          text-shadow: 0 0 20px rgba(67, 56, 202, 0.3), 0 0 40px rgba(99, 102, 241, 0.2);
+        }
+        to {
+          text-shadow: 0 0 40px rgba(67, 56, 202, 0.6), 0 0 60px rgba(99, 102, 241, 0.4);
+        }
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 0.8; transform: scaleX(1); }
+        50% { opacity: 1; transform: scaleX(1.02); }
+      }
+
+      h2 {
+        font-size: 3rem;
+        margin-bottom: 2rem;
+        color: #1e293b;
+        position: relative;
+        padding-bottom: 1rem;
+      }
+
+      h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 120px;
+        height: 4px;
+        background: linear-gradient(90deg, #6366f1 0%, #a5b4fc 100%);
+        border-radius: 2px;
+      }
+
+      h3 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        color: #4338ca;
+      }
+
+      p, li {
+        color: #334155;
+        line-height: 1.7;
+        font-size: 1.3rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+      }
+
+      .large-text {
+        font-size: 1.5rem;
+        line-height: 1.8;
+      }
+
+      .slide-number {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        z-index: 2;
+      }
+
+      .bio-card img,
+      .logo {
+        object-fit: contain;
+        filter: drop-shadow(0 8px 25px rgba(99, 102, 241, 0.3));
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .logo:hover {
+        transform: scale(1.1) rotate(-3deg);
+        filter: drop-shadow(0 12px 35px rgba(99, 102, 241, 0.4));
+      }
+
+      .bio-card {
+        border-radius: 2rem;
+        box-shadow: 0 20px 50px rgba(99, 102, 241, 0.2);
+        background: rgba(255, 255, 255, 0.9);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 3px solid rgba(99, 102, 241, 0.3);
+      }
+
+      .bio-card:hover {
+        transform: scale(1.05) rotate(-2deg);
+        box-shadow: 0 25px 60px rgba(99, 102, 241, 0.3);
+      }
+
+      .content-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        align-items: start;
+      }
+
+      .icon-feature {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(165, 180, 252, 0.05) 100%);
+        border-radius: 16px;
+        border-left: 4px solid #6366f1;
+        transition: all 0.3s ease;
+      }
+
+      .icon-feature:hover {
+        transform: translateX(8px);
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(165, 180, 252, 0.1) 100%);
+      }
+
+      .icon-feature i {
+        font-size: 1.8rem;
+        color: #6366f1;
+        margin-right: 1rem;
+        min-width: 40px;
+      }
+
+      .code-block {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        color: #e2e8f0;
+        padding: 2rem;
+        border-radius: 20px;
+        font-family: 'Fira Code', monospace;
+        font-size: 1.4rem;
+        font-weight: 500;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        border: 1px solid #475569;
+        position: relative;
+        overflow: auto;
+        white-space: pre; /* Preserve line breaks & indentation */
+      }
+
+      .code-block::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
+      }
+
+      .highlight-box {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);
+        border: 2px solid rgba(16, 185, 129, 0.3);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+      }
+
+      .warning-box {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(251, 191, 36, 0.05) 100%);
+        border: 2px solid rgba(245, 158, 11, 0.3);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+      }
+
+      .error-box {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(248, 113, 113, 0.05) 100%);
+        border: 2px solid rgba(239, 68, 68, 0.3);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+      }
+
+      .step-counter {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        margin-right: 1rem;
+        flex-shrink: 0;
+      }
+
+      .assignment-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(165, 180, 252, 0.04) 100%);
+        border-radius: 16px;
+        border-left: 5px solid #6366f1;
+      }
+
+      .visual-element {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(165, 180, 252, 0.05) 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        border: 2px solid rgba(99, 102, 241, 0.2);
+      }
+
+      ul, ol {
+        margin: 0;
+        padding-left: 0;
+      }
+
+      li {
+        margin-bottom: 1rem;
+        padding-left: 2.5rem;
+        position: relative;
+      }
+
+      ul li::before {
+        content: '▶';
+        position: absolute;
+        left: 0;
+        color: #6366f1;
+        font-weight: bold;
+        font-size: 1rem;
+      }
+
+      ol li {
+        counter-increment: list-counter;
+      }
+
+      ol {
+        counter-reset: list-counter;
+      }
+
+      ol li::before {
+        content: counter(list-counter);
+        position: absolute;
+        left: 0;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.9rem;
+      }
+
+      .centered-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 600px;
+      }
+
+      .two-column {
+        display: grid;
+        grid-template-columns: 1fr; /* Stack vertically to prevent clipping */
+        gap: 2rem;
+        align-items: flex-start;
+      }
+
+      .full-width {
+        grid-column: 1 / -1;
+      }
+
+      .footer-info {
+        position: absolute;
+        bottom: 30px;
+        right: 30px;
+        color: #64748b;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      kbd {
+        background: #1e293b;
+        color: #e2e8f0;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-family: 'Fira Code', monospace;
+        font-size: 0.9em;
+        font-weight: 600;
+      }
+
+      code {
+        background: rgba(99, 102, 241, 0.1);
+        color: #4338ca;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-family: 'Fira Code', monospace;
+        font-weight: 600;
+      }
+
+      .chart-container {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .comparison-table {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .comparison-table th {
+        background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%);
+        color: white;
+        padding: 1rem;
+        font-weight: 600;
+        text-align: left;
+      }
+
+      .comparison-table td {
+        padding: 1rem;
+        border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+      }
+
+      .comparison-table tbody tr:hover {
+        background: rgba(99, 102, 241, 0.05);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Slide 1: Title & Overview -->
+    <section class="slide">
+      <div class="slide-number">1 / 45</div>
+      <!-- University & Department Logos -->
+      <div class="flex justify-between items-center mb-6">
+        <img src="https://uonbi.ac.ke/sites/default/files/UoN_Logo.png" alt="University of Nairobi" class="logo h-28" />
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJUIh9dv0WNnwiZ64fo7kmJfcELSzoWP50UWha73nknepHAC_TdWM_IAiaLFCsZLjYdtc&usqp=CAU" alt="MANU Logo" class="logo h-28" />
+      </div>
+      <div>
+        <h1 class="main-heading">Python Basics & Fundamentals</h1>
+        <p class="mt-2 text-xl text-gray-600 font-semibold">
+          Lecture 2 · Variables, Operators, Strings & Code Structure
+        </p>
+      </div>
+      <div class="mt-8 flex-grow flex items-center justify-center">
+        <div class="chart-container">
+          <canvas id="topicsChart" class="aspect-video max-w-xl"></canvas>
+        </div>
+      </div>
+      <div class="footer-info">
+        Prepared by: Isaac Kamau | +254704205553 | LinkedIn: isaak-mwangi
+      </div>
+    </section>
+
+    <!-- Slide 2: Session Overview -->
+    <section class="slide centered-content">
+      <div class="slide-number">2 / 45</div>
+      <h2>📋 Session Overview</h2>
+      <div class="grid gap-4">
+        <div class="icon-feature">
+          <i class="fas fa-code"></i>
+          <span class="large-text">Python Line Structure & Syntax Rules</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-comment"></i>
+          <span class="large-text">Comments: Single & Multi-line</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-indent"></i>
+          <span class="large-text">Python Indentation (Critical!)</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-palette"></i>
+          <span class="large-text">Python Coding Style (PEP 8)</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-database"></i>
+          <span class="large-text">Variables & Data Storage</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-calculator"></i>
+          <span class="large-text">Operators & Mathematical Operations</span>
+        </div>
+        <div class="icon-feature">
+          <i class="fas fa-quote-right"></i>
+          <span class="large-text">Strings & Text Manipulation</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: General Guidelines -->
+    <section class="slide centered-content">
+      <div class="slide-number">3 / 45</div>
+      <h2>⚠️ Key Concepts & Guidelines</h2>
+      <div class="space-y-6">
+        <div class="error-box">
+          <div class="icon-feature">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span class="large-text"><strong>Python is case-sensitive</strong> - <code>Name</code> ≠ <code>name</code> ≠ <code>NAME</code></span>
+          </div>
+        </div>
+        
+        <div class="warning-box">
+          <div class="icon-feature">
+            <i class="fas fa-space-shuttle"></i>
+            <span class="large-text"><strong>Spacing is important</strong> - Indentation determines code blocks</span>
+          </div>
+        </div>
+        
+        <div class="highlight-box">
+          <div class="icon-feature">
+            <i class="fas fa-bug"></i>
+            <span class="large-text"><strong>Use error messages to help you learn</strong> - They're your friends!</span>
+          </div>
+        </div>
+
+        <div class="two-column">
+          <div class="code-block">
+# ✅ These are different variables
+name = "Isaac"
+Name = "Kamau"
+NAME = "PYTHON"
+          </div>
+          <div class="code-block">
+# ❌ This will cause an error
+if 5 > 3:
+print("True")  # Wrong indentation!
+
+# ✅ Correct indentation
+if 5 > 3:
+    print("True")  # 4 spaces
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: Python Indentation -->
+    <section class="slide centered-content">
+      <div class="slide-number">4 / 45</div>
+      <h2>📐 Python Indentation</h2>
+      <div class="space-y-6">
+        <div class="highlight-box">
+          <p class="text-center large-text">
+            <strong>Indentation = spaces at the beginning of a code line</strong>
+          </p>
+          <p class="text-center">In Python, indentation indicates a block of code (unlike { } in other languages)</p>
+        </div>
+        
+        <div class="two-column">
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-green-600">✅ Correct Indentation</h3>
+            <div class="code-block">
+if 5 > 2:
+    print("Five is greater than two!")
+    print("This is inside the if block")
+
+for i in range(3):
+    print(f"Number: {i}")
+    if i > 1:
+        print("Greater than 1")
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-red-600">❌ Wrong Indentation</h3>
+            <div class="code-block">
+if 5 > 2:
+print("This will cause an error!")
+
+# IndentationError: expected an indented block
+
+for i in range(3):
+    print(f"Number: {i}")
+  print("Wrong indentation level")
+  
+# IndentationError: unindent does not match
+            </div>
+          </div>
+        </div>
+
+        <div class="warning-box">
+          <p class="text-center">
+            <i class="fas fa-lightbulb mr-2"></i>
+            <strong>Best Practice:</strong> Use 4 spaces for each indentation level (PEP 8 standard)
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Python Comments -->
+    <section class="slide centered-content">
+      <div class="slide-number">5 / 45</div>
+      <h2>💬 Python Comments</h2>
+      <div class="space-y-6">
+        <div class="highlight-box">
+          <p class="text-center large-text">
+            Comments explain code, make it readable, or disable execution
+          </p>
+        </div>
+        
+        <div class="two-column">
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-blue-600">Single Line Comments</h3>
+            <div class="code-block">
+# This is a single line comment
+print("Hello, World!")  # Comment at end of line
+
+# You can have multiple single line comments
+# to explain complex logic
+x = 5  # Store the value 5 in variable x
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-purple-600">Multi-line Comments</h3>
+            <div class="code-block">
+"""
+This is a multi-line comment.
+It can span multiple lines.
+Very useful for documentation.
+"""
+
+'''
+You can also use single quotes
+for multi-line comments.
+Both work exactly the same way.
+'''
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-green-600">Practical Examples</h3>
+            <div class="code-block">
+# Calculate the area of a rectangle
+length = 10  # Length in meters
+width = 5    # Width in meters
+area = length * width  # Formula: l × w
+
+print(f"Area: {area} square meters")
+
+"""
+Function to calculate compound interest
+Formula: A = P(1 + r/n)^(nt)
+Where:
+- P = Principal amount
+- r = Annual interest rate
+- n = Number of times interest is compounded per year
+- t = Number of years
+"""
+
+# TODO: Implement the compound interest function
+# FIXME: Check for negative values
+            </div>
+            
+            <div class="warning-box mt-4">
+              <h4 class="font-bold mb-2">💡 Comment Best Practices:</h4>
+              <ul class="text-sm space-y-1">
+                <li>• Explain WHY, not WHAT</li>
+                <li>• Keep comments up-to-date</li>
+                <li>• Use TODO and FIXME tags</li>
+                <li>• Avoid obvious comments</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: Python Coding Style (PEP 8) -->
+    <section class="slide centered-content">
+      <div class="slide-number">6 / 45</div>
+      <h2>📜 Python Coding Style (PEP 8)</h2>
+      <div class="space-y-6">
+        <div class="highlight-box">
+          <p class="text-center large-text">
+            <strong>PEP 8</strong> is the official Python style guide
+          </p>
+          <p class="text-center">Read more: <a href="https://peps.python.org/pep-0008/" class="text-indigo-600 underline font-bold">peps.python.org/pep-0008/</a></p>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6">
+          <div class="visual-element">
+            <h3 class="text-lg font-bold mb-3 text-blue-600">📏 Line Length</h3>
+            <div class="space-y-2 text-sm">
+              <p><strong>Maximum:</strong> 79 characters per line</p>
+              <p><strong>Docstrings:</strong> 72 characters</p>
+            </div>
+          </div>
+          
+          <div class="visual-element">
+            <h3 class="text-lg font-bold mb-3 text-green-600">🔤 Naming Conventions</h3>
+            <div class="space-y-2 text-sm">
+              <p><strong>Variables:</strong> snake_case</p>
+              <p><strong>Functions:</strong> snake_case</p>
+              <p><strong>Classes:</strong> PascalCase</p>
+              <p><strong>Constants:</strong> UPPER_CASE</p>
+            </div>
+          </div>
+          
+          <div class="visual-element">
+            <h3 class="text-lg font-bold mb-3 text-purple-600">📐 Indentation</h3>
+            <div class="space-y-2 text-sm">
+              <p><strong>Use:</strong> 4 spaces per level</p>
+              <p><strong>Avoid:</strong> Tabs</p>
+              <p><strong>Never:</strong> Mix tabs and spaces</p>
+            </div>
+          </div>
+          
+          <div class="visual-element">
+            <h3 class="text-lg font-bold mb-3 text-orange-600">🚀 Blank Lines</h3>
+            <div class="space-y-2 text-sm">
+              <p><strong>Top-level functions:</strong> 2 blank lines</p>
+              <p><strong>Class methods:</strong> 1 blank line</p>
+              <p><strong>Logical sections:</strong> 1 blank line</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+# ✅ Good PEP 8 Style
+def calculate_area(length, width):
+    """Calculate the area of a rectangle."""
+    return length * width
+
+class Rectangle:
+    """A simple rectangle class."""
+    
+    def __init__(self, length, width):
+        self.length = length
+        self.width = width
+    
+    def get_area(self):
+        """Return the area of the rectangle."""
+        return self.length * self.width
+
+# Constants
+PI = 3.14159
+MAX_USERS = 1000
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 7: Hello World -->
+    <section class="slide centered-content">
+      <div class="slide-number">7 / 45</div>
+      <h2>👋 Hello World</h2>
+      <div class="space-y-6">
+        <div class="highlight-box">
+          <p class="text-center large-text">
+            Python is an <strong>interpreted language</strong>
+          </p>
+          <p class="text-center">Write your code in a <code>.py</code> file and run it via the interpreter</p>
+        </div>
+        
+        <div class="two-column">
+          <div>
+            <h3 class="text-xl font-bold mb-4">Your First Program</h3>
+            <div class="code-block">
+# hello.py
+print("Hello, World!")
+            </div>
+            
+            <div class="assignment-item mt-4">
+              <div class="step-counter">1</div>
+              <span>Create a file called <code>hello.py</code></span>
+            </div>
+            <div class="assignment-item">
+              <div class="step-counter">2</div>
+              <span>Write the code above</span>
+            </div>
+            <div class="assignment-item">
+              <div class="step-counter">3</div>
+              <span>Run: <kbd>python hello.py</kbd></span>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-bold mb-4">Enhanced Version</h3>
+            <div class="code-block">
+# enhanced_hello.py
+print("Hello, World!")
+print("Welcome to Python programming!")
+print("Today we're learning the basics")
+
+# Output multiple lines
+print("""
+🐍 Python is awesome!
+📚 Let's learn together
+🚀 Ready to code?
+""")
+            </div>
+            
+            <div class="visual-element mt-4">
+              <h4 class="font-bold mb-2">Expected Output:</h4>
+              <div class="text-left text-sm">
+                <p>Hello, World!</p>
+                <p>Welcome to Python programming!</p>
+                <p>Today we're learning the basics</p>
+                <p><br/>🐍 Python is awesome!</p>
+                <p>📚 Let's learn together</p>
+                <p>🚀 Ready to code?</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 8: Variables -->
+    <section class="slide centered-content">
+      <div class="slide-number">8 / 45</div>
+      <h2>📦 Variables</h2>
+      <div class="space-y-6">
+        <div class="highlight-box">
+          <p class="text-center large-text">
+            Variables are <strong>containers for data values</strong>
+          </p>
+          <p class="text-center">No declaration keyword needed - Python figures out the type automatically!</p>
+        </div>
+        
+        <div class="two-column">
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-blue-600">Basic Variables</h3>
+            <div class="code-block">
+# Numbers
+x = 5           # Integer
+y = 3.14        # Float
+z = 2 + 3j      # Complex number
+
+# Text
+name = "Isaac"  # String
+message = 'Hello World!'
+
+# Boolean
+is_student = True
+is_teacher = False
+
+# Print variables
+print(x)        # Output: 5
+print(name)     # Output: Isaac
+print(is_student)  # Output: True
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-green-600">Variable Types</h3>
+            <div class="code-block">
+# Check variable types
+print(type(x))       # &lt;class 'int'&gt;
+print(type(y))       # &lt;class 'float'&gt;
+print(type(name))    # &lt;class 'str'&gt;
+print(type(is_student))  # &lt;class 'bool'&gt;
+
+# Variables can change type
+score = 85        # Integer
+print(type(score))  # &lt;class 'int'&gt;
+
+score = "Excellent"  # Now it's a string
+print(type(score))   # &lt;class 'str'&gt;
+            </div>
+            
+            <div class="warning-box mt-4">
+              <h4 class="font-bold mb-2">📝 Variable Naming Rules:</h4>
+              <ul class="text-sm space-y-1">
+                <li>• Start with letter or underscore</li>
+                <li>• Can contain letters, numbers, underscores</li>
+                <li>• Case-sensitive</li>
+                <li>• No spaces (use snake_case)</li>
+                <li>• Avoid Python keywords</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 9: Multiple Assignments -->
+    <section class="slide centered-content">
+      <div class="slide-number">9 / 45</div>
+      <h2>🎯 Multiple Assignments</h2>
+      <div class="space-y-6">
+        <div class="two-column">
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-purple-600">Multiple Variables, Multiple Values</h3>
+            <div class="code-block">
+# Assign different values to multiple variables
+x, y, z = "Orange", "Banana", "Cherry"
+
+print(x)  # Orange
+print(y)  # Banana
+print(z)  # Cherry
+
+# Works with different types
+name, age, height = "Isaac", 25, 5.8
+print(f"{name} is {age} years old and {height} feet tall")
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-blue-600">One Value to Multiple Variables</h3>
+            <div class="code-block">
+# Same value to multiple variables
+a = b = c = "Python"
+
+print(a)  # Python
+print(b)  # Python
+print(c)  # Python
+
+# All variables point to the same value
+score1 = score2 = score3 = 100
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-green-600">Unpacking Collections</h3>
+            <div class="code-block">
+# Unpack a list
+fruits = ["apple", "banana", "cherry"]
+x, y, z = fruits
+
+print(x)  # apple
+print(y)  # banana
+print(z)  # cherry
+
+# Unpack with different numbers
+numbers = [1, 2, 3, 4, 5]
+first, *middle, last = numbers
+print(first)   # 1
+print(middle)  # [2, 3, 4]
+print(last)    # 5
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-orange-600">Swapping Variables</h3>
+            <div class="code-block">
+# Easy variable swapping in Python
+a = 10
+b = 20
+
+print(f"Before: a={a}, b={b}")
+
+# Swap values (Pythonic way!)
+a, b = b, a
+
+print(f"After: a={a}, b={b}")
+# After: a=20, b=10
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 10: Output Variables -->
+    <section class="slide centered-content">
+      <div class="slide-number">10 / 45</div>
+      <h2>📤 Output Variables</h2>
+      <div class="space-y-6">
+        <div class="two-column">
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-blue-600">Basic Output</h3>
+            <div class="code-block">
+# Simple variable output
+x = "Python is awesome"
+print(x)
+
+# Multiple variables
+name = "Isaac"
+age = 25
+print(name)
+print(age)
+
+# Print multiple variables in one line
+print(name, age)  # Isaac 25
+print(name, age, sep=" - ")  # Isaac - 25
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-green-600">String Concatenation</h3>
+            <div class="code-block">
+first_name = "Isaac"
+last_name = "Kamau"
+
+# Using + operator
+full_name = first_name + " " + last_name
+print(full_name)  # Isaac Kamau
+
+# Multiple strings
+greeting = "Hello, " + full_name + "!"
+print(greeting)  # Hello, Isaac Kamau!
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-purple-600">F-Strings (Best Practice)</h3>
+            <div class="code-block">
+name = "Isaac"
+age = 25
+height = 5.8
+
+# F-string formatting
+message = f"My name is {name}"
+print(message)
+
+# With expressions
+info = f"{name} is {age} years old"
+print(info)
+
+# With calculations
+result = f"Next year, {name} will be {age + 1}"
+print(result)
+
+# Formatting numbers
+price = 19.99
+print(f"Price: ${price:.2f}")  # Price: $19.99
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-orange-600">Other Formatting Methods</h3>
+            <div class="code-block">
+name = "Isaac"
+age = 25
+
+# .format() method
+message = "Hello, {}! You are {} years old".format(name, age)
+print(message)
+
+# With positional arguments
+text = "Name: {0}, Age: {1}".format(name, age)
+print(text)
+
+# % formatting (older style)
+output = "Name: %s, Age: %d" % (name, age)
+print(output)
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 11: Python Operators -->
+    <section class="slide centered-content">
+      <div class="slide-number">11 / 45</div>
+      <h2>🔢 Python Operators</h2>
+      <div class="space-y-6">
+        <div class="highlight-box">
+          <p class="text-center large-text">
+            Operators perform operations on variables and values
+          </p>
+        </div>
+        
+        <div class="comparison-table">
+          <table class="w-full">
+            <thead>
+              <tr>
+                <th>Operator</th>
+                <th>Name</th>
+                <th>Example</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>+</code></td>
+                <td>Addition</td>
+                <td><code>5 + 3</code></td>
+                <td>8</td>
+              </tr>
+              <tr>
+                <td><code>-</code></td>
+                <td>Subtraction</td>
+                <td><code>5 - 3</code></td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <td><code>*</code></td>
+                <td>Multiplication</td>
+                <td><code>5 * 3</code></td>
+                <td>15</td>
+              </tr>
+              <tr>
+                <td><code>/</code></td>
+                <td>Division</td>
+                <td><code>5 / 2</code></td>
+                <td>2.5</td>
+              </tr>
+              <tr>
+                <td><code>%</code></td>
+                <td>Modulo (Remainder)</td>
+                <td><code>5 % 2</code></td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td><code>**</code></td>
+                <td>Exponentiation</td>
+                <td><code>5 ** 2</code></td>
+                <td>25</td>
+              </tr>
+              <tr>
+                <td><code>//</code></td>
+                <td>Floor Division</td>
+                <td><code>5 // 2</code></td>
+                <td>2</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 12: Operators in Action -->
+    <section class="slide centered-content">
+      <div class="slide-number">12 / 45</div>
+      <h2>⚡ Operators in Action</h2>
+      <div class="space-y-6">
+        <div class="two-column">
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-blue-600">Basic Arithmetic</h3>
+            <div class="code-block">
+# Basic operations
+a = 10
+b = 3
+
+print(f"Addition: {a} + {b} = {a + b}")        # 13
+print(f"Subtraction: {a} - {b} = {a - b}")     # 7
+print(f"Multiplication: {a} * {b} = {a * b}")  # 30
+print(f"Division: {a} / {b} = {a / b}")        # 3.333...
+
+# Special operations
+print(f"Modulo: {a} % {b} = {a % b}")          # 1
+print(f"Power: {a} ** {b} = {a ** b}")         # 1000
+print(f"Floor division: {a} // {b} = {a // b}") # 3
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-green-600">Order of Operations</h3>
+            <div class="code-block">
+# PEMDAS/BODMAS applies
+result = 2 + 3 * 4
+print(result)  # 14 (not 20)
+
+result = (2 + 3) * 4
+print(result)  # 20
+
+# Complex calculation
+result = 10 + 5 * 2 ** 3 - 4 // 2
+print(result)  # 10 + 5 * 8 - 2 = 48
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-purple-600">Practical Examples</h3>
+            <div class="code-block">
+# Calculate area of circle
+radius = 5
+pi = 3.14159
+area = pi * radius ** 2
+print(f"Circle area: {area:.2f}")
+
+# Convert temperature
+celsius = 25
+fahrenheit = (celsius * 9/5) + 32
+print(f"{celsius}°C = {fahrenheit}°F")
+
+# Calculate compound interest
+principal = 1000
+rate = 0.05
+time = 3
+amount = principal * (1 + rate) ** time
+print(f"Final amount: ${amount:.2f}")
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-orange-600">Assignment Operators</h3>
+            <div class="code-block">
+# Shorthand operators
+x = 10
+print(f"Initial: {x}")
+
+x += 5    # Same as x = x + 5
+print(f"After +=: {x}")  # 15
+
+x -= 3    # Same as x = x - 3
+print(f"After -=: {x}")  # 12
+
+x *= 2    # Same as x = x * 2
+print(f"After *=: {x}")  # 24
+
+x //= 4   # Same as x = x // 4
+print(f"After //=: {x}") # 6
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 13: Introduction to Strings -->
+    <section class="slide centered-content">
+      <div class="slide-number">13 / 45</div>
+      <h2>📝 Introduction to Strings</h2>
+      <div class="space-y-6">
+        <div class="highlight-box">
+          <p class="text-center large-text">
+            Strings are sequences of characters - shown as variable type <code>str</code>
+          </p>
+          <p class="text-center">Can use single (<code>'</code>) or double (<code>"</code>) quotes</p>
+        </div>
+        
+        <div class="two-column">
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-blue-600">Creating Strings</h3>
+            <div class="code-block">
+# Different ways to create strings
+name = "Isaac"
+message = 'Hello, World!'
+quote = "She said, 'Hello!'"
+another_quote = 'He said, "Hi there!"'
+
+# Multi-line strings
+long_text = """
+This is a multi-line string.
+It can span multiple lines.
+Very useful for documentation!
+"""
+
+# Empty string
+empty = ""
+also_empty = ''
+
+print(type(name))  # &lt;class 'str'&gt;
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-green-600">String Concatenation</h3>
+            <div class="code-block">
+first_name = "Isaac"
+last_name = "Kamau"
+
+# Using + operator
+full_name = first_name + " " + last_name
+print(full_name)  # Isaac Kamau
+
+# Multiple concatenation
+greeting = "Hello, " + first_name + "! Welcome."
+print(greeting)
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-purple-600">Escape Characters</h3>
+            <div class="code-block">
+# Special characters in strings
+print("Hello\nWorld")     # New line
+print("Hello\tWorld")     # Tab
+print("Hello\\World")     # Backslash
+print("Hello\"World\"")   # Double quotes
+print("Hello\'World\'")   # Single quotes
+
+# Raw strings (no escape processing)
+path = r"C:\Users\Name\Documents"
+print(path)
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-orange-600">String Repetition</h3>
+            <div class="code-block">
+# Repeat strings with *
+print("Python" * 3)      # PythonPythonPython
+print("-" * 20)          # --------------------
+print("Ha" * 5)          # HaHaHaHaHa
+
+# Useful for formatting
+separator = "=" * 30
+print(separator)
+print("IMPORTANT MESSAGE")
+print(separator)
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 14: Accessing String Values -->
+    <section class="slide centered-content">
+      <div class="slide-number">14 / 45</div>
+      <h2>🔍 Accessing Values in Strings</h2>
+      <div class="space-y-6">
+        <div class="highlight-box">
+          <p class="text-center large-text">
+            Strings are indexed starting from 0 (first character)
+          </p>
+        </div>
+        
+        <div class="two-column">
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-blue-600">String Indexing</h3>
+            <div class="code-block">
+var1 = "MANU!"
+var2 = "Software Testing"
+
+# Positive indexing (from start)
+print("var1[0]:", var1[0])    # M
+print("var1[1]:", var1[1])    # A
+print("var1[4]:", var1[4])    # !
+
+# Negative indexing (from end)
+print("var1[-1]:", var1[-1])  # !
+print("var1[-2]:", var1[-2])  # U
+
+# Index visualization for "MANU!"
+# M  A  N  U  !
+# 0  1  2  3  4    (positive)
+#-5 -4 -3 -2 -1    (negative)
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-green-600">String Slicing</h3>
+            <div class="code-block">
+text = "Software Testing"
+
+# Basic slicing [start:end]
+print("text[1:5]:", text[1:5])    # oftw
+print("text[0:8]:", text[0:8])    # Software
+
+# Omitting start or end
+print("text[:8]:", text[:8])      # Software
+print("text[9:]:", text[9:])      # Testing
+print("text[:]:", text[:])        # Software Testing
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-purple-600">Advanced Slicing</h3>
+            <div class="code-block">
+x = "Hello World!"
+
+# Slicing with step [start:end:step]
+print(x[::2])       # HloWrd! (every 2nd char)
+print(x[1::2])      # el ol! (every 2nd, start from 1)
+print(x[::-1])      # !dlroW olleH (reverse)
+
+# Practical examples
+print(x[:6])        # Hello  (first 6 chars)
+print(x[6:])        # World! (from 6th to end)
+print(x[0:6] + "MANU")  # HelloMANU
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-orange-600">String Length</h3>
+            <div class="code-block">
+message = "Python Programming"
+
+# Get string length
+length = len(message)
+print(f"Length: {length}")  # 18
+
+# Using length in slicing
+half = len(message) // 2
+first_half = message[:half]
+second_half = message[half:]
+
+print(f"First half: {first_half}")
+print(f"Second half: {second_half}")
+            </div>
+            
+            <div class="warning-box mt-4">
+              <p class="text-sm">
+                <i class="fas fa-exclamation-triangle mr-1"></i>
+                <strong>Remember:</strong> Strings are immutable - you can't change individual characters!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 15: String Methods - Replace -->
+    <section class="slide centered-content">
+      <div class="slide-number">15 / 45</div>
+      <h2>🔄 String replace() Method</h2>
+      <div class="space-y-6">
+        <div class="two-column">
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-blue-600">Basic Replace</h3>
+            <div class="code-block">
+# Replace parts of a string
+oldstring = 'I like python'
+newstring = oldstring.replace('like', 'love')
+print(newstring)  # I love python
+
+# Original string is unchanged
+print(oldstring)  # I like python
+
+# Multiple replacements
+text = "Hello hello HELLO"
+new_text = text.replace("hello", "hi")
+print(new_text)  # Hello hi HELLO (case sensitive!)
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-green-600">Replace with Count</h3>
+            <div class="code-block">
+# Limit number of replacements
+sentence = "I like cats and I like dogs"
+result = sentence.replace("like", "love", 1)
+print(result)  # I love cats and I like dogs
+
+# Replace all occurrences (default)
+result2 = sentence.replace("like", "love")
+print(result2)  # I love cats and I love dogs
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-purple-600">Practical Examples</h3>
+            <div class="code-block">
+# Clean up user input
+user_input = "  Hello World  "
+cleaned = user_input.replace(" ", "")
+print(f"'{cleaned}'")  # 'HelloWorld'
+
+# Remove unwanted characters
+phone = "123-456-7890"
+clean_phone = phone.replace("-", "")
+print(clean_phone)  # 1234567890
+
+# Replace multiple things
+text = "Hello, World!"
+new_text = text.replace(",", "").replace("!", ".")
+print(new_text)  # Hello World.
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-orange-600">Chaining Methods</h3>
+            <div class="code-block">
+# Method chaining
+message = "  Hello, Python World!  "
+result = message.strip().replace(",", "").lower()
+print(result)  # hello python world!
+
+# Step by step (same result)
+step1 = message.strip()      # "Hello, Python World!"
+step2 = step1.replace(",", "") # "Hello Python World!"
+step3 = step2.lower()        # "hello python world!"
+print(step3)
+            </div>
+            
+            <div class="highlight-box mt-4">
+              <h4 class="font-bold mb-2">💡 Common Use Cases:</h4>
+              <ul class="text-sm space-y-1">
+                <li>• Cleaning data (remove spaces, special chars)</li>
+                <li>• Text processing (standardize formats)</li>
+                <li>• Template replacement</li>
+                <li>• URL/path manipulation</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 16: String Case Methods -->
+    <section class="slide centered-content">
+      <div class="slide-number">16 / 45</div>
+      <h2>🔤 String Case Transformation</h2>
+      <div class="space-y-6">
+        <div class="two-column">
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-blue-600">Case Methods</h3>
+            <div class="code-block">
+string = "python at manu"
+
+# Convert to uppercase
+print(string.upper())     # PYTHON AT MANU
+
+# Convert to lowercase
+print(string.lower())     # python at manu
+
+# Title case (first letter of each word)
+print(string.title())     # Python At Manu
+
+# Capitalize (first letter only)
+print(string.capitalize()) # Python at manu
+
+# Swap case
+mixed = "PyThOn"
+print(mixed.swapcase())   # pYtHoN
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-green-600">Case Checking</h3>
+            <div class="code-block">
+text1 = "HELLO"
+text2 = "hello"
+text3 = "Hello World"
+
+# Check case
+print(text1.isupper())    # True
+print(text2.islower())    # True
+print(text3.istitle())    # True
+
+print(text1.islower())    # False
+print(text2.isupper())    # False
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-purple-600">Practical Applications</h3>
+            <div class="code-block">
+# User input standardization
+user_name = "ISAAC kamau"
+formatted_name = user_name.title()
+print(f"Welcome, {formatted_name}!")  # Welcome, Isaac Kamau!
+
+# Case-insensitive comparison
+password = "MyPassword"
+user_input = "mypassword"
+
+# Wrong way (case sensitive)
+if password == user_input:
+    print("Match")
+else:
+    print("No match")  # This will print
+
+# Right way (case insensitive)
+if password.lower() == user_input.lower():
+    print("Match!")  # This will print
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-orange-600">Real-world Examples</h3>
+            <div class="code-block">
+# Email standardization
+email = "USER@EXAMPLE.COM"
+clean_email = email.lower()
+print(clean_email)  # user@example.com
+
+# Name formatting
+names = ["john DOE", "jane SMITH", "bob wilson"]
+formatted_names = [name.title() for name in names]
+print(formatted_names)  # ['John Doe', 'Jane Smith', 'Bob Wilson']
+
+# Constants in code
+config_key = "database_password"
+constant = config_key.upper()
+print(constant)  # DATABASE_PASSWORD
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 17: String Join Method -->
+    <section class="slide centered-content">
+      <div class="slide-number">17 / 45</div>
+      <h2>🔗 String join() Method</h2>
+      <div class="space-y-6">
+        <div class="two-column">
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-blue-600">Basic Join</h3>
+            <div class="code-block">
+# Join characters with a separator
+print(":".join("Python"))
+# Output: P:y:t:h:o:n
+
+# Join list elements
+words = ["Hello", "World", "Python"]
+sentence = " ".join(words)
+print(sentence)  # Hello World Python
+
+# Different separators
+print("-".join(words))   # Hello-World-Python
+print("***".join(words)) # Hello***World***Python
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-green-600">Join with Numbers</h3>
+            <div class="code-block">
+# Numbers need to be converted to strings
+numbers = [1, 2, 3, 4, 5]
+
+# This will cause an error:
+# result = ",".join(numbers)  # TypeError!
+
+# Correct way:
+result = ",".join(str(num) for num in numbers)
+print(result)  # 1,2,3,4,5
+
+# Or convert list first
+str_numbers = [str(num) for num in numbers]
+result2 = ",".join(str_numbers)
+print(result2)  # 1,2,3,4,5
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-purple-600">Practical Examples</h3>
+            <div class="code-block">
+# Create CSV data
+headers = ["Name", "Age", "City"]
+csv_header = ",".join(headers)
+print(csv_header)  # Name,Age,City
+
+data = ["Isaac", "25", "Nairobi"]
+csv_row = ",".join(data)
+print(csv_row)  # Isaac,25,Nairobi
+
+# File path creation
+path_parts = ["home", "user", "documents", "file.txt"]
+file_path = "/".join(path_parts)
+print(file_path)  # home/user/documents/file.txt
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-orange-600">Advanced Usage</h3>
+            <div class="code-block">
+# Join with conditional filtering
+words = ["apple", "", "banana", "", "cherry"]
+# Remove empty strings
+clean_sentence = " ".join(word for word in words if word)
+print(clean_sentence)  # apple banana cherry
+
+# Join with formatting
+prices = [19.99, 25.50, 12.75]
+price_list = ", ".join(f"${price:.2f}" for price in prices)
+print(price_list)  # $19.99, $25.50, $12.75
+
+# Create HTML
+tags = ["python", "programming", "tutorial"]
+html_tags = " ".join(f"#{tag}" for tag in tags)
+print(html_tags)  # #python #programming #tutorial
+            </div>
+          </div>
+        </div>
+        
+        <div class="highlight-box">
+          <p class="text-center">
+            <i class="fas fa-lightbulb mr-2"></i>
+            <strong>Remember:</strong> <code>join()</code> is called on the separator string, not the list!
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 18: Reversing Strings -->
+    <section class="slide centered-content">
+      <div class="slide-number">18 / 45</div>
+      <h2>🔄 Reversing Strings</h2>
+      <div class="space-y-6">
+        <div class="two-column">
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-blue-600">Method 1: Using reversed()</h3>
+            <div class="code-block">
+string = "12345"
+reversed_string = ''.join(reversed(string))
+print(reversed_string)  # 54321
+
+# How it works:
+# 1. reversed(string) creates an iterator
+# 2. join() combines the characters back into a string
+
+# With words
+word = "Python"
+backward = ''.join(reversed(word))
+print(backward)  # nohtyP
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-green-600">Method 2: Slicing</h3>
+            <div class="code-block">
+string = "12345"
+reversed_string = string[::-1]
+print(reversed_string)  # 54321
+
+# More examples
+text = "Hello World"
+print(text[::-1])  # dlroW olleH
+
+name = "Isaac"
+print(name[::-1])  # caasI
+
+# Partial reversal
+print(text[6::-1])  # olleH (reverse first 7 chars)
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-purple-600">Method 3: Loop (Manual)</h3>
+            <div class="code-block">
+string = "12345"
+reversed_string = ""
+
+# Build reversed string character by character
+for char in string:
+    reversed_string = char + reversed_string
+
+print(reversed_string)  # 54321
+
+# Alternative loop method
+string = "Python"
+reversed_string = ""
+for i in range(len(string) - 1, -1, -1):
+    reversed_string += string[i]
+
+print(reversed_string)  # nohtyP
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-orange-600">Practical Applications</h3>
+            <div class="code-block">
+# Check if string is a palindrome
+def is_palindrome(text):
+    clean_text = text.lower().replace(" ", "")
+    return clean_text == clean_text[::-1]
+
+print(is_palindrome("racecar"))    # True
+print(is_palindrome("A man a plan a canal Panama"))  # False
+print(is_palindrome("Madam"))      # True
+
+# Reverse words in a sentence
+sentence = "Hello World Python"
+words = sentence.split()
+reversed_words = [word[::-1] for word in words]
+result = " ".join(reversed_words)
+print(result)  # olleH dlroW nohtyP
+            </div>
+          </div>
+        </div>
+        
+        <div class="warning-box">
+          <p class="text-center">
+            <i class="fas fa-rocket mr-2"></i>
+            <strong>Performance:</strong> Slicing (<code>[::-1]</code>) is usually the fastest method for simple string reversal!
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 19: Splitting Strings -->
+    <section class="slide centered-content">
+      <div class="slide-number">19 / 45</div>
+      <h2>✂️ Splitting Strings</h2>
+      <div class="space-y-6">
+        <div class="two-column">
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-blue-600">Basic split()</h3>
+            <div class="code-block">
+# Split by whitespace (default)
+word = "guru99 career guru99"
+result = word.split()
+print(result)  # ['guru99', 'career', 'guru99']
+
+# Split by specific character
+sentence = "apple,banana,cherry"
+fruits = sentence.split(',')
+print(fruits)  # ['apple', 'banana', 'cherry']
+
+# Split by space explicitly
+text = "Hello World Python"
+words = text.split(' ')
+print(words)  # ['Hello', 'World', 'Python']
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-green-600">Split with Different Delimiters</h3>
+            <div class="code-block">
+word = "guru99 career guru99"
+
+# Split by 'r'
+result = word.split('r')
+print(result)  # ['gu', 'u99 ca', 'ee', ' gu', 'u99']
+
+# Split by longer strings
+email = "user@example.com"
+parts = email.split('@')
+print(parts)  # ['user', 'example.com']
+
+# Split file path
+path = "home/user/documents/file.txt"
+directories = path.split('/')
+print(directories)  # ['home', 'user', 'documents', 'file.txt']
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-purple-600">Limiting Splits</h3>
+            <div class="code-block">
+# Limit number of splits
+text = "apple-banana-cherry-date"
+result = text.split('-', 2)  # Split only twice
+print(result)  # ['apple', 'banana', 'cherry-date']
+
+# Split from the right
+text = "file.backup.txt"
+result = text.rsplit('.', 1)  # Split once from right
+print(result)  # ['file.backup', 'txt']
+
+# Get file name and extension
+filename, extension = text.rsplit('.', 1)
+print(f"Name: {filename}, Ext: {extension}")
+            </div>
+            
+            <h3 class="text-xl font-bold mb-4 mt-6 text-orange-600">Real-world Examples</h3>
+            <div class="code-block">
+# Parse CSV data
+csv_line = "Isaac,25,Nairobi,Engineer"
+data = csv_line.split(',')
+name, age, city, job = data
+print(f"Name: {name}, Age: {age}")
+
+# Process log entries
+log_entry = "2024-01-15 10:30:45 ERROR Connection failed"
+parts = log_entry.split(' ', 3)
+date, time, level, message = parts
+print(f"Level: {level}, Message: {message}")
+
+# Split lines in text
+text = """Line 1
+Line 2
+Line 3"""
+lines = text.split('\n')
+print(lines)  # ['Line 1', 'Line 2', 'Line 3']
+            </div>
+          </div>
+        </div>
+        
+        <div class="highlight-box">
+          <p class="text-center">
+            <i class="fas fa-magic mr-2"></i>
+            <strong>Pro Tip:</strong> Use <code>strip()</code> with <code>split()</code> to handle extra whitespace: <code>[item.strip() for item in text.split(',')]</code>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 20: Practice Exercise -->
+    <section class="slide centered-content">
+      <div class="slide-number">20 / 45</div>
+      <h2>💻 Practice Exercise</h2>
+      <div class="space-y-6">
+        <div class="highlight-box">
+          <p class="text-center large-text">
+            <strong>Let's practice what we've learned!</strong>
+          </p>
+        </div>
+        
+        <div class="assignment-item">
+          <div class="step-counter">1</div>
+          <div>
+            <span class="large-text block mb-2"><strong>String Manipulation Challenge</strong></span>
+            <div class="code-block text-left">
+# Create a program that:
+# 1. Takes a full name input
+# 2. Converts it to proper case
+# 3. Splits first and last name
+# 4. Creates an email address
+# 5. Displays formatted information
+
+full_name = "isaac kamau mwangi"
+
+# Your code here:
+# Convert to title case
+# Split into parts
+# Create email (first.last@manu.ac.ke)
+# Display results
+
+# Expected output:
+# Name: Isaac Kamau Mwangi
+# First: Isaac, Last: Mwangi
+# Email: isaac.mwangi@manu.ac.ke
+            </div>
+          </div>
+        </div>
+        
+        <div class="assignment-item">
+          <div class="step-counter">2</div>
+          <div>
+            <span class="large-text block mb-2"><strong>Calculator Program</strong></span>
+            <div class="code-block text-left">
+# Create a simple calculator that:
+# 1. Takes two numbers
+# 2. Performs all basic operations
+# 3. Formats output nicely
+
+num1 = 10
+num2 = 3
+
+# Calculate and display:
+# Addition, Subtraction, Multiplication, Division
+# Modulo, Exponentiation, Floor Division
+# Use f-strings for nice formatting
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 21: Assignment -->
+    <section class="slide centered-content">
+      <div class="slide-number">21 / 45</div>
+      <h2>📝 Assignment 2 (Due Next Lecture)</h2>
+      <div class="space-y-6">
+        <div class="assignment-item">
+          <div class="step-counter">1</div>
+          <div>
+            <span class="large-text block mb-2"><strong>Personal Information Script</strong></span>
+            <div class="code-block text-left">
+# Create a file called personal_info.py with:
+
+# Personal variables
+first_name = "Your First Name"
+last_name = "Your Last Name" 
+age = your_age
+favorite_subject = "Your favorite subject"
+
+# Use string methods and operators to create:
+# 1. Full name in title case
+# 2. Email address (firstname.lastname@student.uonbi.ac.ke)
+# 3. A message about your age next year
+# 4. Your initials
+# 5. Reversed name (for fun!)
+
+# Display everything with nice formatting
+            </div>
+            <p class="text-sm mt-2">Submit your <code>personal_info.py</code> file on LMS</p>
+          </div>
+        </div>
+        
+        <div class="assignment-item">
+          <div class="step-counter">2</div>
+          <div>
+            <span class="large-text block mb-2"><strong>String Methods Explorer</strong></span>
+            <div class="code-block text-left">
+# Create a file called string_explorer.py
+
+# Take this text and apply different string methods:
+sample_text = "  PYTHON programming is AWESOME and fun!  "
+
+# Apply these methods and print results:
+# 1. strip() - remove whitespace
+# 2. lower() - convert to lowercase  
+# 3. replace() - replace "AWESOME" with "AMAZING"
+# 4. split() - split into words
+# 5. join() - join words with " | "
+# 6. Your choice of 3 more string methods
+
+# Add comments explaining what each method does
+            </div>
+            <p class="text-sm mt-2">Submit your <code>string_explorer.py</code> file on LMS</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="warning-box mt-8">
+        <p class="text-center large-text">
+          <i class="fas fa-clock mr-2"></i>
+          <strong>Office hours:</strong> Thu 16:00–18:00 EAT • Zoom link on LMS
+        </p>
+      </div>
+    </section>
+
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {
+        // Course Topics Chart for Lecture 2
+        const data = [2, 3, 2, 3, 2];
+        const labels = [
+          'Python Structure',
+          'Variables & Types',
+          'Operators',
+          'Strings',
+          'Best Practices'
+        ];
+        const colors = ['#4338ca', '#6366f1', '#818cf8', '#a5b4fc', '#c7d2fe'];
+
+        new Chart(document.getElementById('topicsChart'), {
+          type: 'doughnut',
+          data: {
+            labels,
+            datasets: [{
+              data,
+              backgroundColor: colors,
+              borderColor: '#4338ca',
+              borderWidth: 2,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { 
+                display: true,
+                position: 'bottom',
+                labels: {
+                  font: { size: 12, weight: '600' },
+                  color: '#374151',
+                  padding: 15
+                }
+              },
+              title: {
+                display: true,
+                text: 'Lecture 2: Python Basics Topics',
+                font: { size: 20, weight: '700', family: 'Poppins' },
+                color: '#1e3a8a',
+                padding: 20
+              },
+              tooltip: {
+                backgroundColor: 'rgba(67, 56, 202, 0.9)',
+                titleColor: 'white',
+                bodyColor: 'white',
+                borderColor: '#6366f1',
+                borderWidth: 2,
+                cornerRadius: 10,
+                titleFont: { size: 14, weight: 'bold' },
+                bodyFont: { size: 12 },
+                callbacks: {
+                  label: ctx => `${ctx.label}: ${ctx.parsed} sections`
+                }
+              }
+            },
+            animation: {
+              duration: 2000,
+              easing: 'easeOutBounce'
+            }
+          }
+        });
+      });
+    </script>
+  </body>
+</html> 
